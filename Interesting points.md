@@ -103,7 +103,8 @@ data['season'] = (np.where(data["month"].isin([12, 1, 2]), 0,
 - For normal numerical features, we can add statistical features (mean, sum, `log` or `ratio`). Also, we can transform a numerical feature into a `categorical feature` by cutting it into classes.
 
 # Week 2: Modeling
-This week, the classical machine learning methods are introduced, including linear models, tree-based methods (random forests, Gradient Boosting, XGBoost), LDA, etc...
+This week, the classical machine learning methods are introduced, including linear models, tree-based methods (random forests, Gradient Boosting, XGBoost), LDA, etc... We can find some useful functions in  `utils.py`.
+
 
 Serveral key points to notice:
 
