@@ -1,4 +1,6 @@
-# Part 0: Plotly
+# Week 1
+
+## Part 0: Plotly
 `Plotly`'s Python graphing library makes interactive, publication-quality graphs. Here are [documentations](https://plotly.com/python/). There are really "all" kinds of figures.
 
 With Dash, we can build machine learning web apps in Python, such as NLP translation web app, GAN demos, regression model. It is very helpful with a good visualization tool. Demos are [here](https://plotly.com/building-machine-learning-web-apps-in-python/)
@@ -6,7 +8,7 @@ With Dash, we can build machine learning web apps in Python, such as NLP transla
 
 
 
-# Part 1: Data cleaning 
+## Part 1: Data cleaning 
 
 - File format: `Feather`. It is a binary file and it takes less memory space and less time when we do I/O operations. Supported by `pandas`. 
 
@@ -49,7 +51,7 @@ plt.show()
 ```
 To notice: how to combine `plt` and `seaborn`; how to use `.flatten()`; choose a beautiful color; how to **drop empty axes**.
 
-# Part 2: data visualisation
+## Part 2: data visualisation
 - use of `pivot_table` to better analyse data. It is similar to `groupby`. Use case in detail: [zhihu](https://zhuanlan.zhihu.com/p/31952948)
 
 - use `heatmap` in `seaborn` to visualize the relationship between variables. Use case on [zhihu](https://zhuanlan.zhihu.com/p/96040773). We can use a `pivot_table` as input.
@@ -69,7 +71,7 @@ _ = (
 )
 ```
 
-# Part 3: Feature Engineering
+## Part 3: Feature Engineering
 Some ideas of Feature Engineering:
 
 - For timestamps, we can extract some information to form a new feature, such as **hour, weekday, day, month, year, is_wider_busness_hours, is_weekend, season...**. It really depends on concret application. Example:
@@ -99,3 +101,45 @@ data['season'] = (np.where(data["month"].isin([12, 1, 2]), 0,
 - For geographic position, maybe it is a good idea to divide into different regions (province, country, continent...)
 
 - For normal numerical features, we can add statistical features (mean, sum, `log` or `ratio`). Also, we can transform a numerical feature into a `categorical feature` by cutting it into classes.
+
+# Week 2: Modeling
+This week, the classical machine learning methods are introduced, including linear models, tree-based methods (random forests, Gradient Boosting, XGBoost), LDA, etc...
+
+Serveral key points to notice:
+
+- For linear model, we can plot coefficient importance; for other methods, we can plot the `feature importance`, which is useful for feature selection. The function `plot_importance` in `utils.py` can do this.
+
+- `stacking of models`: instead of using trivial functions (such as the mean) to aggregate the predictions of all predictors in a set in the case of a random forest for instance, why not **train a model to perform this aggregation**?
+
+Let' assume that we have B differents models represented by $\hat M_1,\hat M_2, \hat M_3,... \hat M_B $. 
+
+We divide $X_{train}$ in two parts : $(X_{train_1}, X_{train_2})$.
+
+We train $\hat M_1,\hat M_2, \hat M_3,... \hat M_B $ on $X_{train_{1}}$.
+
+We make B differents predictions on $X_{train_2}$ : $ \hat y_1 , \hat y_2, ..., \hat y_B$
+
+If we denote $\hat X =  (\hat y_1 , \hat y_2, ..., \hat y_B)$, Then we train a last model $\hat M_L$ on $(y_{train_2} , \hat X )$ 
+
+Finally several models are trained on the data and a **last model is trained on the predictions of the other models**. This is a new training set! This last model is called a `meta model`. We can choose a linear model because we find that it makes sense to model the predictions of the others with a linear model; however it's not necessarily the best choice.
+
+Sklearn has a function `StackingRegressor` to do stacking of models.
+
+- Classification metrics: accuracy, precision, recall, F1-score.
+
+`accuracy`: what percentage of my predictions are correct?
+
+`precision`: if I focus on a given class (say, fraudulent payments): **what percentage of predicted frauds are actual frauds**?
+
+`recall`: if I focus on a given class (say, fraudulent payments): **what percentage of the actual frauds can I correctly identify** with my model?
+
+`f1-score` has no simple direct interpretation, but it's a handy measure when you want to monitor both precision and recall and summarize them in a single metric. There is a tradeoff between precision and recall. We can modify the threshold of classification to search a best f1-score.
+
+There is one paragraph which analyse these metrics on a true dataset. We can borrow this analysis in other practical cases. The `balance of the classes` is a key factor to take into account when we analyse the result.
+
+- Confusion matrix is another helpful tool to analyse classification result. We can find function `ConfusionMatrixDisplay` in sklearn.
+
+- When spliting the dataset, we should take into account the balance of classes, by setting the argument `stratify` in function `train_test_split`. In this way, for each class, there would be 20% data in test set.
+```{python}
+Xtrain, Xval, Ytrain, Yval = train_test_split(data, target, test_size=0.2, stratify=target)
+```
