@@ -144,3 +144,38 @@ There is one paragraph which analyse these metrics on a true dataset. We can bor
 ```{python}
 Xtrain, Xval, Ytrain, Yval = train_test_split(data, target, test_size=0.2, stratify=target)
 ```
+
+# Week 3: Optimization
+- Auto-reload modules in Python. The following code enables the auto-reload. Well explained [here](https://switowski.com/blog/ipython-autoreload/).
+```{Python}
+%load_ext autoreload
+%autoreload 2
+```
+- Feature selection techniques (cf. codes in notebook):
+    1. Univariate Selection  
+    
+    `SelectKBest` function in sklearn, using different statistical tests to select a specific number of features
+
+    2. Feature Importance
+
+    `Feature importance` is a built-in attribute of Tree Based Classifiers
+
+    3. Recursive Feature Selection
+
+    `Recursive Feature Elimination (or RFE)` works by recursively removing attributes and building a model on those attributes that remain. It uses the model accuracy to identify which attributes (and combination of attributes) contribute the most to predicting the target attribute.
+
+    Refer to `RFE` function in sklearn.
+
+    4. Principal Component Analysis
+
+    select the top `principal components` (combination of attributes) as the most important features.
+
+    5. Correlation Matrix with Heatmap
+
+    A `correlation heatmap` is a graphical representation of a correlation matrix representing the correlation between different variables. 
+
+- Hyperparameter tuning
+
+`GridSearchCV` and `RandomizedSearchCV` are functions in sklearn which respectively achieves grid search and random search for hyperparameters. 
+
+One can also perform such a search on `Keras/TensorFlow with sklearn`, using package `SciKeras`. Here is the [doc](https://www.adriangb.com/scikeras/stable/). 
